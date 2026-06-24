@@ -17,5 +17,17 @@ jobs:
           python -m py_compile steam_free.py
           python steam_free.py --help > /tmp/steam-help.txt
           test -s /tmp/steam-help.txt
-          test -f steam-free-games.html
+          python - <<'PY'
+          import steam_free
+          html = steam_free.build_html([{
+              "title": "Demo Game",
+              "worth": "$9.99",
+              "ends": "Limited time",
+              "url": "https://store.steampowered.com/",
+              "img": "",
+              "source": "Smoke fixture",
+          }])
+          assert "Demo Game" in html
+          assert "Claim free" in html
+          PY
           test -f assets/screenshot.png
