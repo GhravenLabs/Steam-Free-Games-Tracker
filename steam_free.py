@@ -150,6 +150,8 @@ def build_html(games):
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Find free / 100%-off Steam games and build a claim page.")
     ap.add_argument("--no-open", action="store_true", help="don't auto-open the page in a browser")
+    ap.add_argument("--open-if-any", action="store_true",
+                    help="only open the page when there's at least one free game (for scheduled runs)")
     args = ap.parse_args(argv)
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -167,7 +169,8 @@ def main(argv=None):
     else:
         print("  None available right now — page built anyway.")
     print(f"\nPage written to {OUT}")
-    if not args.no_open:
+    do_open = not args.no_open and not (args.open_if_any and not games)
+    if do_open:
         import os
         webbrowser.open("file://" + os.path.abspath(OUT))
     return 0
