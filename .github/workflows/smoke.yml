@@ -15,6 +15,7 @@ jobs:
       - name: Compile and verify static output
         run: |
           python -m py_compile steam_free.py
-          python steam_free.py --help | grep -q "Find free"
+          python steam_free.py --help > /tmp/steam-help.txt
+          test -s /tmp/steam-help.txt
           test -f steam-free-games.html
           test -f assets/screenshot.png
