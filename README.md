@@ -3,6 +3,12 @@
 Finds **free / 100%-off Steam games** and builds a clean, clickable HTML page with one-click
 **claim links**. Pure Python standard library — no dependencies, no Steam login.
 
+![Steam Free Games Tracker screenshot](assets/screenshot.png)
+
+## Portfolio proof
+- [Case study](PORTFOLIO-CASE-STUDY.md) — how a small automation tool turns public APIs into a useful daily dashboard.
+- GitHub Actions smoke check compiles the script, validates the CLI help path, and confirms the generated HTML proof file exists.
+
 ## Safe by design
 It only **reads public data** — it never logs into your Steam account and never automates
 purchases, so there's **zero account-ban risk**. You click "Claim free", Steam opens, you confirm,
@@ -24,6 +30,9 @@ Or just **double-click `run.bat`** (Windows).
 ## Keep it automatic (optional)
 Use **Windows Task Scheduler** to run `run.bat` once a day, and you'll always have a fresh
 `steam-free-games.html` of everything free — never miss a giveaway.
+
+For account-level auto-claiming, read `AUTO-CLAIM-SETUP.md` first. It explains the limits, risk,
+and why this tracker itself stays read-only.
 
 ## Tech
 Standard-library only (`urllib`, `json`, `html`): fetches two public APIs, merges/dedupes, and
