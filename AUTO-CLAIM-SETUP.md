@@ -25,16 +25,21 @@ Together that's hands-off: ASF auto-grabs the Steam-native freebies; the tracker
   Use a strong password + keep **Steam Guard** on. Only *you* enter your credentials into ASF locally.
 
 ## Setup (high level — follow the official wiki for exact steps)
-1. Download **ArchiSteamFarm** from the official releases:
-   https://github.com/JustArchiNET/ArchiSteamFarm/releases
-2. Unzip and run it. Open the web UI it prints (usually `http://localhost:1242`).
-3. **Create a bot** = add your Steam account (username; ASF prompts for password + Steam Guard on
-   first login). Official guide: https://github.com/JustArchiNET/ArchiSteamFarm/wiki/Configuration
-4. To auto-claim free games, add the community plugin **ASFFreeGames**
-   (https://github.com/maxisoft/ASFFreeGames) — drop it in ASF's `plugins/` folder. It watches a
-   maintained list of free-to-keep games and claims them on your account automatically.
-5. Leave ASF running (or set it to start with Windows / on a schedule). It now claims new Steam-native
-   freebies hands-off.
+1. **Download ASF** (the self-contained Windows build, so you don't need to install .NET):
+   from https://github.com/JustArchiNET/ArchiSteamFarm/releases grab **`ASF-win-x64.zip`**.
+   Unzip to a folder, e.g. `D:\ASF`.
+2. **Run** `ArchiSteamFarm.exe`. It starts a local web UI — open `http://localhost:1242` in your browser.
+   (On first run it asks you to set an **IPC password** for that UI — set one.)
+3. **Add your Steam account (bot):** in the web UI → **Bots → New bot** → enter your Steam **username**,
+   set **Enabled = true**, save. ASF logs in and prompts for your **password + Steam Guard code** the
+   first time. (Official guide: https://github.com/JustArchiNET/ArchiSteamFarm/wiki/Setting-up)
+4. **Install the auto-claim plugin (ASFFreeGames):** download its `.zip` from
+   https://github.com/maxisoft/ASFFreeGames/releases → create `plugins\ASFFreeGames\` inside your ASF
+   folder and extract the files there → **restart ASF**. It now periodically claims free-to-keep Steam
+   games onto your account automatically. (Verify it loaded: the ASF log lists ASFFreeGames on startup.)
+5. **Make it start with Windows (true hands-off):** put a shortcut to `ArchiSteamFarm.exe` in your
+   Startup folder — press `Win+R`, type `shell:startup`, drop the shortcut there. Now ASF runs in the
+   background every boot and claims new freebies without you doing anything.
 
 ## What I set up for you (the tracker side)
 - A **daily Windows task** ("SteamFreeGamesTracker", 11:00) runs the tracker silently and only opens
