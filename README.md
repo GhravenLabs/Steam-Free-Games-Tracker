@@ -22,6 +22,12 @@ python steam_free.py --no-open  # build the page without opening a browser
 ```
 Or just **double-click `run.bat`** (Windows).
 
+The generated page is saved in the current working directory. Browser opening supports
+paths containing spaces, `#`, and `%`; the Windows launchers use their own folder.
+
+Run `python -m unittest -v` for offline regression checks of file links and browser-opening
+flags. Tests use synthetic games and mock the browser; they do not contact either API.
+
 ## What it does
 1. Pulls free-to-keep **Steam giveaways** from the GamerPower API (title, value, end date, claim link).
 2. Pulls Steam's own **specials** and keeps the ones at **100% off** (free right now).

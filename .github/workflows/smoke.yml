@@ -31,3 +31,5 @@ jobs:
           assert "Claim free" in html
           PY
           test -f assets/screenshot.png
+      - name: Test browser output and scheduled-run flags offline
+        run: python -m unittest -v

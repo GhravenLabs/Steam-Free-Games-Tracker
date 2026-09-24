@@ -23,6 +23,7 @@ import sys
 import urllib.request
 import webbrowser
 from datetime import datetime
+from pathlib import Path
 
 UA = {"User-Agent": "Steam-Free-Games-Tracker/1.0"}
 OUT = "steam-free-games.html"
@@ -160,7 +161,8 @@ def main(argv=None):
 
     print("Checking for free Steam games...")
     games = collect()
-    open(OUT, "w", encoding="utf-8").write(build_html(games))
+    output = Path(OUT).resolve()
+    output.write_text(build_html(games), encoding="utf-8")
 
     if games:
         print(f"\n  {len(games)} free / 100%-off game(s):")
@@ -171,8 +173,7 @@ def main(argv=None):
     print(f"\nPage written to {OUT}")
     do_open = not args.no_open and not (args.open_if_any and not games)
     if do_open:
-        import os
-        webbrowser.open("file://" + os.path.abspath(OUT))
+        webbrowser.open(output.as_uri())
     return 0
 
 
