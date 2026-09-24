@@ -2,9 +2,9 @@
 """Steam Free Games Tracker — finds free / 100%-off Steam games and builds a
 clickable HTML page with one-click claim links.
 
-Safe by design: it only READS public data (no Steam login, no automation), so
-there's zero account risk. You click "Claim" yourself — Steam adds the game in
-a couple of seconds.
+It only reads public data: no Steam login or automatic redemption. Offer links
+may lead to Steam or a third-party giveaway page; availability and redemption
+requirements must be checked at the destination.
 
 Sources:
   * GamerPower API  — free-to-keep Steam giveaways (title, value, end date, claim link)
@@ -111,8 +111,8 @@ def build_html(games):
         </div>
       </div>""")
     grid = "".join(cards) if cards else (
-        '<div class="empty">No free or 100%-off Steam games right now. '
-        'Re-run the tracker later — new giveaways appear often.</div>')
+        '<div class="empty">No offers returned by this run. '
+        'Check terminal warnings for failed source requests, or try again later.</div>')
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -141,7 +141,7 @@ def build_html(games):
 </style></head>
 <body><div class="wrap">
   <h1>🎮 Free Steam Games — <span>{len(games)} available</span></h1>
-  <div class="sub">Last checked {now}. Click “Claim free” → it opens Steam; you confirm and it's yours. No login automation, no account risk.</div>
+  <div class="sub">Last checked {now}. Offer links open Steam or a third-party giveaway page. Check availability and redemption requirements there. This tracker does not log in or claim games for you.</div>
   <div class="grid">{grid}</div>
   <p class="foot">Re-run <b>steam_free.py</b> (or <b>run.bat</b>) to refresh.<br>
   Sources: GamerPower free-game giveaways + Steam 100%-off specials.</p>
@@ -169,7 +169,7 @@ def main(argv=None):
         for g in games:
             print(f"   • {g['title']}  (was {g['worth']}, ends {g['ends']})")
     else:
-        print("  None available right now — page built anyway.")
+        print("  No offers returned — check source warnings above. Page built anyway.")
     print(f"\nPage written to {OUT}")
     do_open = not args.no_open and not (args.open_if_any and not games)
     if do_open:

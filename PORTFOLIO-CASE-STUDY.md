@@ -13,9 +13,10 @@ Steam Free Games Tracker pulls public giveaway data, filters Steam offers that a
 - Makes a relatable portfolio example that is easy for non-technical visitors to understand.
 
 ## Verification
-- Generated HTML proof: `steam-free-games.html`
+- Local output: run `python steam_free.py --no-open` to generate `steam-free-games.html` (not checked into the repository).
 - Screenshot: `assets/screenshot.png`
 - Smoke check: `.github/workflows/smoke.yml`
+- Offline tests: `python -m unittest -v` checks synthetic HTML output and browser-opening flags; CI does not verify live offer availability or redemption.
 
 ## Next upgrades
 - Add a local history file so repeated offers can be marked "seen."

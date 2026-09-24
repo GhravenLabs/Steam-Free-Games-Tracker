@@ -7,13 +7,17 @@ Finds **free / 100%-off Steam games** and builds a clean, clickable HTML page wi
 
 ## Portfolio proof
 - [Case study](PORTFOLIO-CASE-STUDY.md) — how a small automation tool turns public APIs into a useful daily dashboard.
-- GitHub Actions smoke check compiles the script, validates the CLI help path, and confirms the generated HTML proof file exists.
+- GitHub Actions compiles the script, checks CLI help, renders a synthetic game in memory, and runs offline regression tests.
 
-## Safe by design
-It only **reads public data** — it never logs into your Steam account and never automates
-purchases, so there's **zero account-ban risk**. You click "Claim free", Steam opens, you confirm,
-and the game is yours (a couple of seconds). *(Full auto-claiming requires automating your logged-in
-account, which violates Steam's terms and can get you banned — this tool deliberately doesn't do that.)*
+## Account access and offer limits
+The tracker only **reads public data**. It does not request Steam credentials, log into your
+account, or claim games for you. Offer links may lead to Steam or a third-party giveaway page;
+check the destination and its requirements before signing in or redeeming a key.
+
+Listings can expire, run out of keys, or have regional restrictions. The tracker does not
+guarantee availability, successful redemption, or the safety of a third-party destination.
+An empty page means no offers were returned by this run; check terminal warnings for failed
+API requests before interpreting it as an absence of giveaways.
 
 ## Usage
 ```bash
@@ -34,11 +38,12 @@ flags. Tests use synthetic games and mock the browser; they do not contact eithe
 3. De-duplicates, sorts by end date, and writes `steam-free-games.html` — a card grid with claim buttons.
 
 ## Keep it automatic (optional)
-Use **Windows Task Scheduler** to run `run.bat` once a day, and you'll always have a fresh
-`steam-free-games.html` of everything free — never miss a giveaway.
+Optionally use **Windows Task Scheduler** to run `daily.bat` once a day. It opens the page only
+when offers are returned. Refreshes depend on the computer running, network access, and API
+availability; the two sources do not cover every giveaway. Cloning or running this repository
+does not install a scheduled task.
 
-For account-level auto-claiming, read `AUTO-CLAIM-SETUP.md` first. It explains the limits, risk,
-and why this tracker itself stays read-only.
+See [automation scope](AUTO-CLAIM-SETUP.md) for scheduling and manual-redemption boundaries.
 
 ## Tech
 Standard-library only (`urllib`, `json`, `html`): fetches two public APIs, merges/dedupes, and
