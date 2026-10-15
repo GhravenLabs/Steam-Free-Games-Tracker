@@ -24,9 +24,22 @@ import urllib.request
 import webbrowser
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
 UA = {"User-Agent": "Steam-Free-Games-Tracker/1.0"}
 OUT = "steam-free-games.html"
+
+
+def safe_http_url(value):
+    """Return a usable web URL, or an empty string for unsafe/invalid input."""
+    value = str(value or "").strip()
+    try:
+        parts = urlsplit(value)
+    except ValueError:
+        return ""
+    if parts.scheme.lower() not in {"http", "https"} or not parts.netloc:
+        return ""
+    return value
 
 
 def _get(url, timeout=20):
@@ -97,17 +110,18 @@ def build_html(games):
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     cards = []
     for g in games:
-        img = e(g["img"] or "")
+        claim_url = e(safe_http_url(g.get("url")))
+        image_url = e(safe_http_url(g.get("img")))
+        image = f'<img src="{image_url}" alt="" loading="lazy">' if image_url else ""
         cards.append(f"""
       <div class="card">
-        <a class="thumb" href="{e(g['url'])}" target="_blank" rel="noopener"
-           style="background-image:url('{img}')"><span class="free">FREE</span></a>
+        <a class="thumb" href="{claim_url}" target="_blank" rel="noopener">{image}<span class="free">FREE</span></a>
         <div class="body">
           <div class="title">{e(g['title'])}</div>
           <div class="meta"><span class="was">was {e(str(g['worth']))}</span>
             <span class="src">{e(g['source'])}</span></div>
           <div class="ends">Ends: {e(str(g['ends']))}</div>
-          <a class="claim" href="{e(g['url'])}" target="_blank" rel="noopener">Claim free →</a>
+          <a class="claim" href="{claim_url}" target="_blank" rel="noopener">Claim free →</a>
         </div>
       </div>""")
     grid = "".join(cards) if cards else (
@@ -128,6 +142,7 @@ def build_html(games):
   .card{{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:.2s}}
   .card:hover{{transform:translateY(-4px);border-color:var(--green)}}
   .thumb{{display:block;height:130px;background:#0e1520 center/cover no-repeat;position:relative}}
+  .thumb img{{display:block;width:100%;height:100%;object-fit:cover}}
   .free{{position:absolute;top:10px;left:10px;background:var(--green);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:5px;letter-spacing:.05em}}
   .body{{padding:14px 16px 16px}}
   .title{{font-size:16px;font-weight:600;margin-bottom:8px;line-height:1.3}}

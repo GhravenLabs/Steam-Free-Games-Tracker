@@ -43,5 +43,29 @@ class BrowserOutputTests(unittest.TestCase):
             browser.assert_not_called()
 
 
+class GeneratedLinkSafetyTests(unittest.TestCase):
+    def test_generated_cards_reject_non_http_links(self):
+        page = steam_free.build_html([{
+            "title": "Demo", "worth": "Free", "ends": "Soon",
+            "url": "javascript:alert(1)", "img": "data:image/svg+xml,<svg></svg>",
+            "source": "Fixture",
+        }])
+        self.assertNotIn("javascript:", page)
+        self.assertNotIn("data:image", page)
+        self.assertNotIn("<img", page)
+        self.assertEqual(page.count('href=""'), 2)
+
+    def test_generated_cards_keep_escaped_https_links(self):
+        page = steam_free.build_html([{
+            "title": "Demo", "worth": "Free", "ends": "Soon",
+            "url": "https://example.com/claim?a=1&b=2",
+            "img": "https://cdn.example.com/cover?q='demo'",
+            "source": "Fixture",
+        }])
+        self.assertIn('href="https://example.com/claim?a=1&amp;b=2"', page)
+        self.assertIn('src="https://cdn.example.com/cover?q=&#x27;demo&#x27;"', page)
+        self.assertNotIn("background-image:url", page)
+
+
 if __name__ == "__main__":
     unittest.main()
